@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Details</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f6f9fc 0%, #e9ecef 100%);
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 8vh;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            background-color: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            height: 92vh;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            overflow: hidden;
+        }
+
+        .event-details {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .event-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .event-title {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .event-subtitle {
+            color: #4a5568;
+            font-size: 1rem;
+        }
+
+        .event-status {
+            background: #48bb78;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .event-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+        }
+
+        .info-card h3 {
+            color: #2d3748;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .info-list {
+            list-style: none;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .timeline {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        .timeline-item {
+            display: flex;
+            gap: 15px;
+            padding: 10px 0;
+            border-left: 2px solid #667eea;
+            margin-left: 15px;
+            padding-left: 15px;
+        }
+
+        .timeline-time {
+            min-width: 100px;
+            color: #667eea;
+            font-weight: 500;
+        }
+
+        .timeline-content {
+            color: #4a5568;
+        }
+
+        .staff-section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .staff-list {
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .staff-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .staff-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #e2e8f0;
+        }
+
+        .staff-info {
+            flex: 1;
+        }
+
+        .staff-name {
+            color: #2d3748;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+
+        .staff-role {
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .staff-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .chat-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .rate-btn {
+            background: #f6ad55;
+            color: white;
+        }
+
+        .pay-btn {
+            background: #48bb78;
+            color: white;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            width: 400px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4a5568;
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 5px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .star-rating i {
+            color: #ffd700;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .review-input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            margin: 10px 0;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-review {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        /* Scrollbar styling */
+        .staff-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .staff-list::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .staff-list::-webkit-scrollbar-track {
+            background-color: #f8f9fa;
+        }
+        .payment-method {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            justify-content: center;
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .payment-method.selected {
+            border-color: #667eea;
+            background-color: #ebf8ff;
+            color: #667eea;
+        }
+
+        .payment-method i {
+            font-size: 1.1rem;
+        }
+
+        #cardFields, #bankFields {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Event Details</h1>
+            <div class="nav-buttons">
+                <button class="nav-btn">
+                    <i class="fas fa-list"></i> All Events
+                </button>
+                <button class="nav-btn">
+                    <i class="fas fa-user"></i> Profile
+                </button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="event-details">
+                <div class="event-header">
+                    <div>
+                        <h2 class="event-title">Corporate Gala Dinner</h2>
+                        <p class="event-subtitle">Ritz Carlton Ballroom</p>
+                    </div>
+                    <span class="event-status">In Progress</span>
+                </div>
+
+                <div class="event-grid">
+                    <div class="info-card">
+                        <h3>Event Details</h3>
+                        <ul class="info-list">
+                            <li><i class="far fa-calendar"></i> January 20, 2025</li>
+                            <li><i class="far fa-clock"></i> 5:00 PM - 11:00 PM</li>
+                            <li><i class="fas fa-users"></i> 350 Guests</li>
+                            <li><i class="fas fa-map-marker-alt"></i> Financial District</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>Service Requirements</h3>
+                        <ul class="info-list">
+                            <li><i class="fas fa-glass-martini-alt"></i> Full Bar Service</li>
+                            <li><i class="fas fa-utensils"></i> Plated Dinner</li>
+                            <li><i class="fas fa-wine-glass"></i> Wine Service</li>
+                            <li><i class="fas fa-concierge-bell"></i> Butler Service</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline">
+                    <h3 style="margin-bottom: 15px;">Event Timeline</h3>
+                    <div class="timeline-item">
+                        <div class="timeline-time">5:00 PM</div>
+                        <div class="timeline-content">Staff arrival and briefing</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">5:30 PM</div>
+                        <div class="timeline-content">Bar setup complete</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">6:00 PM</div>
+                        <div class="timeline-content">Guest arrival & champagne service</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">7:00 PM</div>
+                        <div class="timeline-content">Dinner service begins</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">8:30 PM</div>
+                        <div class="timeline-content">Dessert service</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">11:00 PM</div>
+                        <div class="timeline-content">Event conclusion & cleanup</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="staff-section">
+                <h2 style="color: #2d3748;">Event Staff</h2>
+                <div class="staff-list">
+                    <div class="staff-card">
+                        <div class="staff-avatar"></div>
+                        <div class="staff-info">
+                            <div class="staff-name">Sarah Johnson</div>
+                            <div class="staff-role">Captain</div>
+                        </div>
+                        <div class="staff-actions">
+                            <button class="action-btn chat-btn" onclick="window.location.href='chat.html'">
+                                <i class="fas fa-comments"></i>
+                            </button>
+                            <button class="action-btn rate-btn" onclick="openRatingModal()">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button class="action-btn pay-btn" onclick="openPaymentModal()">
+                                <i class="fas fa-dollar-sign"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="staff-card">
+                        <div class="staff-avatar"></div>
+                        <div class="staff-info">
+                            <div class="staff-name">Michael Chen</div>
+                            <div class="staff-role">Lead Bartender</div>
+                        </div>
+                        <div class="staff-actions">
+                            <button class="action-btn chat-btn" onclick="window.location.href='chat.html'">
+                                <i class="fas fa-comments"></i>
+                            </button>
+                            <button class="action-btn rate-btn" onclick="openRatingModal()">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button class="action-btn pay-btn" onclick="openPaymentModal()">
+                                <i class="fas fa-dollar-sign"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="staff-card">
+                        <div class="staff-avatar"></div>
+                        <div class="staff-info">
+                            <div class="staff-name">Emily Rodriguez</div>
+                            <div class="staff-role">Server</div>
+                        </div>
+                        <div class="staff-actions">
+                            <button class="action-btn chat-btn" onclick="window.location.href='chat.html'">
+                                <i class="fas fa-comments"></i>
+                            </button>
+                            <button class="action-btn rate-btn" onclick="openRatingModal()">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button class="action-btn pay-btn" onclick="openPaymentModal()">
+                                <i class="fas fa-dollar-sign"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Payment Details</h3>
+                <button class="close-modal" onclick="closePaymentModal()">&times;</button>
+            </div>
+            <form id="paymentForm">
+                <div class="payment-methods">
+                    <button type="button" class="payment-method" data-method="card">
+                        <i class="fas fa-credit-card"></i> Credit Card
+                    </button>
+                    <button type="button" class="payment-method" data-method="bank">
+                        <i class="fas fa-university"></i> Bank Transfer
+                    </button>
+                </div>
+
+                <div id="cardFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="cardNumber">Card Number</label>
+                        <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" placeholder="123" maxlength="4">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bankFields" style="display: none;">
+                    <div class="form-group">
+                        <label for="accountNumber">Account Number</label>
+                        <input type="text" id="accountNumber" placeholder="Enter account number">
+                    </div>
+                    <div class="form-group">
+                        <label for="routingNumber">Routing Number</label>
+                        <input type="text" id="routingNumber" placeholder="Enter routing number">
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-review">Process Payment</button>
+            </form>
+        </div>
+    </div>
+    <!-- Rating Modal -->
+    <div class="modal" id="ratingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Rate Staff Member</h3>
+                <button class="close-modal" onclick="closeRatingModal()">&times;</button>
+            </div>
+            <div class="star-rating">
+                <i class="fas fa-star" data-rating="1"></i>
+                <i class="fas fa-star" data-rating="2"></i>
+                <i class="fas fa-star" data-rating="3"></i>
+                <i class="fas fa-star" data-rating="4"></i>
+                <i class="fas fa-star" data-rating="5"></i>
+            </div>
+            <textarea class="review-input" placeholder="Write your review here..."></textarea>
+            <button class="submit-review" onclick="submitReview()">Submit Review</button>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        function openRatingModal() {
+            document.getElementById('ratingModal').style.display = 'flex';
+        }
+
+        function closeRatingModal() {
+            document.getElementById('ratingModal').style.display = 'none';
+            resetRating();
+        }
+
+        // Star rating functionality
+        const stars = document.querySelectorAll('.star-rating i');
+        let currentRating = 0;
+
+        stars.forEach(star => {
+            star.addEventListener('mouseover', function() {
+                const rating = this.dataset.rating;
+                highlightStars(rating);
+            });
+
+            star.addEventListener('click', function() {
+                currentRating = this.dataset.rating;
+                highlightStars(currentRating);
+            });
+
+            star.addEventListener('mouseout', function() {
+                highlightStars(currentRating);
+            });
+        });
+
+        function highlightStars(rating) {
+            stars.forEach(star => {
+                const starRating = star.dataset.rating;
+                if (starRating <= rating) {
+                    star.style.color = '#ffd700'; // Gold color
+                } else {
+                    star.style.color = '#e2e8f0'; // Gray color
+                }
+            });
+        }
+
+        function resetRating() {
+            currentRating = 0;
+            highlightStars(0);
+            document.querySelector('.review-input').value = '';
+        }
+
+        function submitReview() {
+            const review = document.querySelector('.review-input').value;
+            if (currentRating === 0) {
+                alert('Please select a rating');
+                return;
+            }
+            if (review.trim() === '') {
+                alert('Please write a review');
+                return;
+            }
+            // Here you would typically send the review to your backend
+            console.log('Rating:', currentRating, 'Review:', review);
+            closeRatingModal();
+        }
+        // Payment Modal functionality
+function openPaymentModal() {
+    document.getElementById('paymentModal').style.display = 'flex';
+}
+
+function closePaymentModal() {
+    document.getElementById('paymentModal').style.display = 'none';
+    resetPaymentForm();
+}
+
+// Payment form functionality
+const paymentForm = document.getElementById('paymentForm');
+let selectedMethod = '';
+
+// Payment method selection
+const paymentMethods = document.querySelectorAll('.payment-method');
+paymentMethods.forEach(method => {
+    method.addEventListener('click', function() {
+        selectedMethod = this.dataset.method;
+        highlightSelectedMethod(selectedMethod);
+        showRelevantFields(selectedMethod);
+    });
+});
+
+function highlightSelectedMethod(method) {
+    paymentMethods.forEach(btn => {
+        if (btn.dataset.method === method) {
+            btn.classList.add('selected');
+        } else {
+            btn.classList.remove('selected');
+        }
+    });
+}
+
+function showRelevantFields(method) {
+    const cardFields = document.getElementById('cardFields');
+    const bankFields = document.getElementById('bankFields');
+    
+    if (method === 'card') {
+        cardFields.style.display = 'block';
+        bankFields.style.display = 'none';
+    } else if (method === 'bank') {
+        cardFields.style.display = 'none';
+        bankFields.style.display = 'block';
+    }
+}
+
+function resetPaymentForm() {
+    selectedMethod = '';
+    paymentForm.reset();
+    paymentMethods.forEach(btn => btn.classList.remove('selected'));
+    document.getElementById('cardFields').style.display = 'none';
+    document.getElementById('bankFields').style.display = 'none';
+}
+
+function validateCardNumber(number) {
+    // Basic validation for 16-digit card number
+    return /^\d{16}$/.test(number.replace(/\s/g, ''));
+}
+
+function validateExpiryDate(expiry) {
+    // Basic MM/YY validation
+    return /^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(expiry);
+}
+
+function validateCVV(cvv) {
+    // Basic 3-4 digit CVV validation
+    return /^\d{3,4}$/.test(cvv);
+}
+
+function submitPayment(event) {
+    event.preventDefault();
+    
+    if (!selectedMethod) {
+        alert('Please select a payment method');
+        return;
+    }
+
+    if (selectedMethod === 'card') {
+        const cardNumber = document.getElementById('cardNumber').value;
+        const expiryDate = document.getElementById('expiryDate').value;
+        const cvv = document.getElementById('cvv').value;
+
+        if (!validateCardNumber(cardNumber)) {
+            alert('Please enter a valid card number');
+            return;
+        }
+        if (!validateExpiryDate(expiryDate)) {
+            alert('Please enter a valid expiry date (MM/YY)');
+            return;
+        }
+        if (!validateCVV(cvv)) {
+            alert('Please enter a valid CVV');
+            return;
+        }
+    } else if (selectedMethod === 'bank') {
+        const accountNumber = document.getElementById('accountNumber').value;
+        const routingNumber = document.getElementById('routingNumber').value;
+
+        if (!accountNumber || !routingNumber) {
+            alert('Please fill in all bank details');
+            return;
+        }
+    }
+
+    // Here you would typically send the payment details to your backend
+    console.log('Processing payment with method:', selectedMethod);
+    closePaymentModal();
+    }
+
+    // Event listeners
+    document.getElementById('paymentForm').addEventListener('submit', submitPayment);
+
+    // Format card number as user types
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '');
+        value = value.replace(/(\d{4})/g, '$1 ').trim();
+        e.target.value = value;
+    });
+
+    // Format expiry date as user types
+    document.getElementById('expiryDate').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.slice(0, 2) + '/' + value.slice(2, 4);
+        }
+        e.target.value = value;
+    });
+    </script>
+</body>
+</html>

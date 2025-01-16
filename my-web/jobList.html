@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Staff Job Listings</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f6f9fc 0%, #e9ecef 100%);
+        }
+
+        .container {
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 10px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 8vh;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .profile-btn {
+            background-color: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .main-content {
+            height: 92vh;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 20px;
+        }
+
+        .filters {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-item label {
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .jobs-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .jobs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .job-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .job-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .job-title {
+            font-size: 1.1rem;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .job-venue {
+            font-size: 0.9rem;
+            color: #4a5568;
+        }
+
+        .job-pay {
+            font-size: 1.1rem;
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .job-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: #4a5568;
+        }
+
+        .detail-item i {
+            color: #667eea;
+            font-size: 1rem;
+        }
+
+        .job-description {
+            font-size: 0.9rem;
+            color: #4a5568;
+            margin: 10px 0;
+            line-height: 1.4;
+        }
+
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .job-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .job-tag {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #4a5568;
+        }
+
+        .apply-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .apply-btn:hover {
+            background: #5a67d8;
+        }
+
+        /* Scrollbar styling */
+        .jobs-grid::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .jobs-grid::-webkit-scrollbar-thumb {
+            background-color: #cbd5e0;
+            border-radius: 3px;
+        }
+
+        .jobs-grid::-webkit-scrollbar-track {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Available Events</h1>
+            <button class="profile-btn">
+                <i class="fas fa-user"></i> View Profile
+            </button>
+        </div>
+
+        <div class="main-content">
+            <div class="filters">
+                <div class="filter-section">
+                    <h3>Event Type</h3>
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <input type="checkbox" id="wedding">
+                            <label for="wedding">Weddings</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="corporate">
+                            <label for="corporate">Corporate Events</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="private">
+                            <label for="private">Private Parties</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Role</h3>
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <input type="checkbox" id="server">
+                            <label for="server">Server</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="bartender">
+                            <label for="bartender">Bartender</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="captain">
+                            <label for="captain">Captain</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>Pay Range</h3>
+                    <div class="filter-group">
+                        <div class="filter-item">
+                            <input type="checkbox" id="range1">
+                            <label for="range1">$15 - $20/hr</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="range2">
+                            <label for="range2">$20 - $25/hr</label>
+                        </div>
+                        <div class="filter-item">
+                            <input type="checkbox" id="range3">
+                            <label for="range3">$25+/hr</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="jobs-container">
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search events by venue, location, or role...">
+                </div>
+
+                <div class="jobs-grid">
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <h3 class="job-title">Wedding Reception Service</h3>
+                                <p class="job-venue">Four Seasons Hotel</p>
+                            </div>
+                            <span class="job-pay">$25/hr</span>
+                        </div>
+                        <div class="job-details">
+                            <div class="detail-item">
+                                <i class="far fa-calendar"></i>
+                                <span>Jan 20, 2025</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>4:00 PM - 11:00 PM</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Downtown</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>250 Guests</span>
+                            </div>
+                        </div>
+                        <p class="job-description">Elegant wedding reception requiring experienced servers for plated dinner service. Wine service experience required.</p>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Wedding</span>
+                                <span class="job-tag">Fine Dining</span>
+                            </div>
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <h3 class="job-title">Corporate Gala Bartender</h3>
+                                <p class="job-venue">Ritz Carlton</p>
+                            </div>
+                            <span class="job-pay">$30/hr</span>
+                        </div>
+                        <div class="job-details">
+                            <div class="detail-item">
+                                <i class="far fa-calendar"></i>
+                                <span>Jan 25, 2025</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>5:00 PM - 12:00 AM</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Financial District</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>400 Guests</span>
+                            </div>
+                        </div>
+                        <p class="job-description">High-end corporate event seeking experienced bartenders. Craft cocktail experience and TIPS certification required.</p>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Corporate</span>
+                                <span class="job-tag">Bartending</span>
+                            </div>
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+
+                    <div class="job-card">
+                        <div class="job-header">
+                            <div>
+                                <h3 class="job-title">Private Birthday Party</h3>
+                                <p class="job-venue">The Peninsula</p>
+                            </div>
+                            <span class="job-pay">$22/hr</span>
+                        </div>
+                        <div class="job-details">
+                            <div class="detail-item">
+                                <i class="far fa-calendar"></i>
+                                <span>Jan 28, 2025</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="far fa-clock"></i>
+                                <span>6:00 PM - 10:00 PM</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Upper East Side</span>
+                            </div>
+                            <div class="detail-item">
+                                <i class="fas fa-users"></i>
+                                <span>50 Guests</span>
+                            </div>
+                        </div>
+                        <p class="job-description">Intimate birthday celebration requiring servers for passed appetizers and buffet management.</p>
+                        <div class="job-footer">
+                            <div class="job-tags">
+                                <span class="job-tag">Private</span>
+                                <span class="job-tag">Casual</span>
+                            </div>
+                            <button class="apply-btn">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
