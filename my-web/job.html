@@ -405,6 +405,44 @@
             border: 1px solid #e2e8f0;
             border-radius: 6px;
         }
+
+        .review-container {
+    position: relative;
+    padding: 15px;
+}
+
+.review-loading-state {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+}
+
+.loading-spinner {
+    color: #667eea;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    animation: spin 1s linear infinite;
+}
+
+.loading-message {
+    color: #4a5568;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
     </style>
 </head>
 <body>
@@ -428,7 +466,7 @@
                         <h2 class="event-title">Corporate Gala Dinner</h2>
                         <p class="event-subtitle">Ritz Carlton Ballroom</p>
                     </div>
-                    <span class="event-status">In Progress</span>
+                    <span class="event-status">completed</span>
                 </div>
 
                 <div class="event-grid">
@@ -619,12 +657,14 @@
         </div>
     </div>
     <!-- Rating Modal -->
-    <div class="modal" id="ratingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Rate Staff Member</h3>
-                <button class="close-modal" onclick="closeRatingModal()">&times;</button>
-            </div>
+    <!-- Rating Modal -->
+<div class="modal" id="ratingModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Rate Staff Member</h3>
+            <button class="close-modal" onclick="closeRatingModal()">&times;</button>
+        </div>
+        <div class="review-container"> <!-- Add this wrapper -->
             <div class="star-rating">
                 <i class="fas fa-star" data-rating="1"></i>
                 <i class="fas fa-star" data-rating="2"></i>
@@ -633,12 +673,59 @@
                 <i class="fas fa-star" data-rating="5"></i>
             </div>
             <textarea class="review-input" placeholder="Write your review here..."></textarea>
+            <!-- Loading State -->
+            <div id="reviewLoadingState" class="review-loading-state" style="display: none;">
+                <div class="loading-spinner">
+                    <i class="fas fa-circle-notch fa-spin"></i>
+                </div>
+                <div class="loading-message">
+                    <p id="loadingText">Calculating new rating...</p>
+                </div>
+            </div>
             <button class="submit-review" onclick="submitReview()">Submit Review</button>
         </div>
     </div>
+</div>
 
     <script>
         // Modal functionality
+        function submitReview() {
+        const review = document.querySelector('.review-input').value;
+        if (currentRating === 0) {
+            alert('Please select a rating');
+            return;
+        }
+        if (review.trim() === '') {
+            alert('Please write a review');
+            return;
+        }
+
+        // Show loading state
+        const loadingState = document.getElementById('reviewLoadingState');
+        const loadingText = document.getElementById('loadingText');
+        loadingState.style.display = 'flex';
+
+        // Loading text sequence
+        const loadingMessages = [
+            'Calculating new rating...',
+            'Processing review...',
+            'Updating profile...'
+        ];
+        let messageIndex = 0;
+
+        const messageInterval = setInterval(() => {
+            loadingText.textContent = loadingMessages[messageIndex];
+            messageIndex = (messageIndex + 1) % loadingMessages.length;
+        }, 1000);
+
+        // Simulate processing time
+        setTimeout(() => {
+            clearInterval(messageInterval);
+            console.log('Rating:', currentRating, 'Review:', review);
+            closeRatingModal();
+            loadingState.style.display = 'none';
+        }, 3000);
+    }
         function openRatingModal() {
             document.getElementById('ratingModal').style.display = 'flex';
         }
@@ -685,20 +772,7 @@
             document.querySelector('.review-input').value = '';
         }
 
-        function submitReview() {
-            const review = document.querySelector('.review-input').value;
-            if (currentRating === 0) {
-                alert('Please select a rating');
-                return;
-            }
-            if (review.trim() === '') {
-                alert('Please write a review');
-                return;
-            }
-            // Here you would typically send the review to your backend
-            console.log('Rating:', currentRating, 'Review:', review);
-            closeRatingModal();
-        }
+      
         // Payment Modal functionality
     function openPaymentModal() {
         document.getElementById('paymentModal').style.display = 'flex';
