@@ -341,6 +341,70 @@
         #cardFields, #bankFields {
             margin-top: 15px;
         }
+        .payment-amount-section {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .currency-converter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .amount-group {
+            flex: 1;
+        }
+
+        .currency-select {
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            background: white;
+            min-width: 80px;
+        }
+
+        .converted-amounts {
+            background: white;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+
+        .converted-amount {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .converted-amount:last-child {
+            border-bottom: none;
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .amount-input {
+            font-size: 1.5rem;
+            font-weight: 500;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
     </style>
 </head>
 <body>
@@ -488,7 +552,31 @@
                 <h3>Payment Details</h3>
                 <button class="close-modal" onclick="closePaymentModal()">&times;</button>
             </div>
-            <form id="paymentForm">
+            <form id="paymentForm" onsubmit="submitPayment(event)">
+                <div class="payment-amount-section">
+                    <div class="currency-converter">
+                        <div class="amount-group">
+                            <label for="paymentAmount">Amount</label>
+                            <input type="number" id="paymentAmount" class="amount-input" value="100" min="0" step="0.01" onchange="updateConversions()">
+                        </div>
+                        <div>
+                            <label for="baseCurrency">Currency</label>
+                            <select id="baseCurrency" class="currency-select" onchange="updateConversions()">
+                                <option value="USD">USD</option>
+                                <option value="EUR">EUR</option>
+                                <option value="GBP">GBP</option>
+                                <option value="JPY">JPY</option>
+                                <option value="AUD">AUD</option>
+                                <option value="CAD">CAD</option>
+                                <option value="ILS">ILS</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="converted-amounts" id="convertedAmounts">
+                        <!-- Converted amounts will be inserted here -->
+                    </div>
+                </div>
+
                 <div class="payment-methods">
                     <button type="button" class="payment-method" data-method="card">
                         <i class="fas fa-credit-card"></i> Credit Card
@@ -612,133 +700,180 @@
             closeRatingModal();
         }
         // Payment Modal functionality
-function openPaymentModal() {
-    document.getElementById('paymentModal').style.display = 'flex';
-}
-
-function closePaymentModal() {
-    document.getElementById('paymentModal').style.display = 'none';
-    resetPaymentForm();
-}
-
-// Payment form functionality
-const paymentForm = document.getElementById('paymentForm');
-let selectedMethod = '';
-
-// Payment method selection
-const paymentMethods = document.querySelectorAll('.payment-method');
-paymentMethods.forEach(method => {
-    method.addEventListener('click', function() {
-        selectedMethod = this.dataset.method;
-        highlightSelectedMethod(selectedMethod);
-        showRelevantFields(selectedMethod);
-    });
-});
-
-function highlightSelectedMethod(method) {
-    paymentMethods.forEach(btn => {
-        if (btn.dataset.method === method) {
-            btn.classList.add('selected');
-        } else {
-            btn.classList.remove('selected');
-        }
-    });
-}
-
-function showRelevantFields(method) {
-    const cardFields = document.getElementById('cardFields');
-    const bankFields = document.getElementById('bankFields');
-    
-    if (method === 'card') {
-        cardFields.style.display = 'block';
-        bankFields.style.display = 'none';
-    } else if (method === 'bank') {
-        cardFields.style.display = 'none';
-        bankFields.style.display = 'block';
-    }
-}
-
-function resetPaymentForm() {
-    selectedMethod = '';
-    paymentForm.reset();
-    paymentMethods.forEach(btn => btn.classList.remove('selected'));
-    document.getElementById('cardFields').style.display = 'none';
-    document.getElementById('bankFields').style.display = 'none';
-}
-
-function validateCardNumber(number) {
-    // Basic validation for 16-digit card number
-    return /^\d{16}$/.test(number.replace(/\s/g, ''));
-}
-
-function validateExpiryDate(expiry) {
-    // Basic MM/YY validation
-    return /^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(expiry);
-}
-
-function validateCVV(cvv) {
-    // Basic 3-4 digit CVV validation
-    return /^\d{3,4}$/.test(cvv);
-}
-
-function submitPayment(event) {
-    event.preventDefault();
-    
-    if (!selectedMethod) {
-        alert('Please select a payment method');
-        return;
+    function openPaymentModal() {
+        document.getElementById('paymentModal').style.display = 'flex';
     }
 
-    if (selectedMethod === 'card') {
-        const cardNumber = document.getElementById('cardNumber').value;
-        const expiryDate = document.getElementById('expiryDate').value;
-        const cvv = document.getElementById('cvv').value;
+    function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+        resetPaymentForm();
+    }
 
-        if (!validateCardNumber(cardNumber)) {
-            alert('Please enter a valid card number');
-            return;
-        }
-        if (!validateExpiryDate(expiryDate)) {
-            alert('Please enter a valid expiry date (MM/YY)');
-            return;
-        }
-        if (!validateCVV(cvv)) {
-            alert('Please enter a valid CVV');
-            return;
-        }
-    } else if (selectedMethod === 'bank') {
-        const accountNumber = document.getElementById('accountNumber').value;
-        const routingNumber = document.getElementById('routingNumber').value;
+    // Payment form functionality
+    const paymentForm = document.getElementById('paymentForm');
+    let selectedMethod = '';
 
-        if (!accountNumber || !routingNumber) {
-            alert('Please fill in all bank details');
-            return;
+    // Payment method selection
+    const paymentMethods = document.querySelectorAll('.payment-method');
+    paymentMethods.forEach(method => {
+        method.addEventListener('click', function() {
+            selectedMethod = this.dataset.method;
+            highlightSelectedMethod(selectedMethod);
+            showRelevantFields(selectedMethod);
+        });
+    });
+
+    function highlightSelectedMethod(method) {
+        paymentMethods.forEach(btn => {
+            if (btn.dataset.method === method) {
+                btn.classList.add('selected');
+            } else {
+                btn.classList.remove('selected');
+            }
+        });
+    }
+
+    function showRelevantFields(method) {
+        const cardFields = document.getElementById('cardFields');
+        const bankFields = document.getElementById('bankFields');
+        
+        if (method === 'card') {
+            cardFields.style.display = 'block';
+            bankFields.style.display = 'none';
+        } else if (method === 'bank') {
+            cardFields.style.display = 'none';
+            bankFields.style.display = 'block';
         }
     }
 
-    // Here you would typically send the payment details to your backend
-    console.log('Processing payment with method:', selectedMethod);
-    closePaymentModal();
+    function resetPaymentForm() {
+        selectedMethod = '';
+        paymentForm.reset();
+        paymentMethods.forEach(btn => btn.classList.remove('selected'));
+        document.getElementById('cardFields').style.display = 'none';
+        document.getElementById('bankFields').style.display = 'none';
     }
 
-    // Event listeners
-    document.getElementById('paymentForm').addEventListener('submit', submitPayment);
+    function validateCardNumber(number) {
+        // Basic validation for 16-digit card number
+        return /^\d{16}$/.test(number.replace(/\s/g, ''));
+    }
 
-    // Format card number as user types
-    document.getElementById('cardNumber').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\s/g, '');
-        value = value.replace(/(\d{4})/g, '$1 ').trim();
-        e.target.value = value;
-    });
+    function validateExpiryDate(expiry) {
+        // Basic MM/YY validation
+        return /^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(expiry);
+    }
 
-    // Format expiry date as user types
-    document.getElementById('expiryDate').addEventListener('input', function(e) {
-        let value = e.target.value.replace(/\D/g, '');
-        if (value.length >= 2) {
-            value = value.slice(0, 2) + '/' + value.slice(2, 4);
+    function validateCVV(cvv) {
+        // Basic 3-4 digit CVV validation
+        return /^\d{3,4}$/.test(cvv);
+    }
+
+    function submitPayment(event) {
+        event.preventDefault();
+        
+        if (!selectedMethod) {
+            alert('Please select a payment method');
+            return;
         }
-        e.target.value = value;
-    });
+
+        if (selectedMethod === 'card') {
+            const cardNumber = document.getElementById('cardNumber').value;
+            const expiryDate = document.getElementById('expiryDate').value;
+            const cvv = document.getElementById('cvv').value;
+
+            if (!validateCardNumber(cardNumber)) {
+                alert('Please enter a valid card number');
+                return;
+            }
+            if (!validateExpiryDate(expiryDate)) {
+                alert('Please enter a valid expiry date (MM/YY)');
+                return;
+            }
+            if (!validateCVV(cvv)) {
+                alert('Please enter a valid CVV');
+                return;
+            }
+        } else if (selectedMethod === 'bank') {
+            const accountNumber = document.getElementById('accountNumber').value;
+            const routingNumber = document.getElementById('routingNumber').value;
+
+            if (!accountNumber || !routingNumber) {
+                alert('Please fill in all bank details');
+                return;
+            }
+        }
+
+        // Here you would typically send the payment details to your backend
+        console.log('Processing payment with method:', selectedMethod);
+        closePaymentModal();
+        }
+
+        // Event listeners
+        document.getElementById('paymentForm').addEventListener('submit', submitPayment);
+
+        // Format card number as user types
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            value = value.replace(/(\d{4})/g, '$1 ').trim();
+            e.target.value = value;
+        });
+
+        // Format expiry date as user types
+        document.getElementById('expiryDate').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+                value = value.slice(0, 2) + '/' + value.slice(2, 4);
+            }
+            e.target.value = value;
+        });
+        // Exchange rates (you would typically get these from an API)
+    const exchangeRates = {
+        USD: 1,
+        EUR: 0.85,
+        GBP: 0.73,
+        JPY: 110.25,
+        AUD: 1.35,
+        CAD: 1.25,
+        ILS: 3.63  // Israeli Shekel exchange rate
+    };
+
+    // Currency formatting
+    const currencyFormatters = {
+        USD: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }),
+        EUR: new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }),
+        GBP: new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }),
+        JPY: new Intl.NumberFormat('ja-JP', { style: 'currency', currency: 'JPY' }),
+        AUD: new Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }),
+        CAD: new Intl.NumberFormat('en-CA', { style: 'currency', currency: 'CAD' }),
+        ILS: new Intl.NumberFormat('he-IL', { style: 'currency', currency: 'ILS' })
+    };
+
+    function updateConversions() {
+        const amount = parseFloat(document.getElementById('paymentAmount').value);
+        const baseCurrency = document.getElementById('baseCurrency').value;
+        const baseAmount = amount / exchangeRates[baseCurrency]; 
+        
+        let conversionsHTML = '';
+        Object.keys(exchangeRates).forEach(currency => {
+            if (currency !== baseCurrency) {
+                const convertedAmount = baseAmount * exchangeRates[currency];
+                conversionsHTML += `
+                    <div class="converted-amount">
+                        <span>${currency}</span>
+                        <span>${currencyFormatters[currency].format(convertedAmount)}</span>
+                    </div>`;
+            }
+        });
+        
+        document.getElementById('convertedAmounts').innerHTML = conversionsHTML;
+    }
+
+    // Call this when opening the payment modal
+    function openPaymentModal() {
+        document.getElementById('paymentModal').style.display = 'flex';
+        updateConversions(); // Initialize conversions
+    }
     </script>
 </body>
 </html>

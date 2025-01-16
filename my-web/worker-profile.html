@@ -165,7 +165,164 @@
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
             gap: 1rem;
         }
+        .recommendations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
 
+.recommendation-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+    background: #f7fafc;
+    border-radius: 8px;
+}
+
+.recommendation-item i {
+    font-size: 1.5rem;
+    color: #6366f1;
+}
+
+.recommendation-item h4 {
+    color: #2d3748;
+    margin-bottom: 0.25rem;
+}
+
+.recommendation-item p {
+    color: #718096;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    font-size: 3rem;
+    color: #6366f1;
+    margin-bottom: 1.5rem;
+}
+
+.loading-messages {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.loading-message {
+    color: #4a5568;
+    font-size: 1.1rem;
+}
+
+.typing-dots {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.typing-dots::after {
+    content: "...";
+    position: absolute;
+    left: 0;
+    animation: typing 1.5s infinite;
+    color: #6366f1;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+}
+
+@keyframes typing {
+    0% { content: "."; }
+    33% { content: ".."; }
+    66% { content: "..."; }
+    100% { content: "."; }
+}
+
+.upload-section {
+    margin-bottom: 20px;
+}
+
+.file-drop-zone {
+    border: 2px dashed #e2e8f0;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.file-drop-zone:hover {
+    border-color: #6366f1;
+    background: #f8fafc;
+}
+
+.file-drop-zone i {
+    font-size: 2.5rem;
+    color: #6366f1;
+    margin-bottom: 1rem;
+}
+
+.file-drop-zone.drag-over {
+    border-color: #6366f1;
+    background: #f8fafc;
+}
+
+.file-input {
+    display: none;
+}
+
+.file-info {
+    color: #718096;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem;
+    background: #f8fafc;
+    border-radius: 6px;
+}
+
+.file-item-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.file-item-name i {
+    color: #6366f1;
+}
+
+.remove-file {
+    color: #e53e3e;
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0.25rem;
+}
+
+.remove-file:hover {
+    color: #c53030;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
         .skill-item {
             background: #f7fafc;
             padding: 0.75rem;
@@ -477,6 +634,149 @@
             background: #4f46e5;
         }
     </style>
+
+    <script>
+const loadingMessages = [
+    "Analyzing profile...",
+    "Checking work history...",
+    "Reviewing certifications...",
+    "Scanning for opportunities...",
+    "Generating recommendations..."
+];
+
+function openAIRecommendModal() {
+    document.getElementById('aiRecommendModal').style.display = 'flex';
+    document.getElementById('loadingState').style.display = 'flex';
+    document.getElementById('recommendationsList').style.display = 'none';
+    
+    let messageIndex = 0;
+    const messageElement = document.querySelector('.loading-message');
+    
+    // Change messages every 1.5 seconds
+    const messageInterval = setInterval(() => {
+        messageElement.textContent = loadingMessages[messageIndex];
+        messageIndex = (messageIndex + 1) % loadingMessages.length;
+    }, 1500);
+
+    // Show recommendations after 6 seconds
+    setTimeout(() => {
+        clearInterval(messageInterval);
+        document.getElementById('loadingState').style.display = 'none';
+        document.getElementById('recommendationsList').style.display = 'flex';
+    }, 6000);
+}
+
+function closeAIRecommendModal() {
+    document.getElementById('aiRecommendModal').style.display = 'none';
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('aiRecommendModal');
+    if (event.target === modal) {
+        closeAIRecommendModal();
+    }
+}
+
+let uploadedFiles = [];
+
+function openAddReferenceModal() {
+    document.getElementById('referenceModal').style.display = 'flex';
+}
+
+function closeReferenceModal() {
+    document.getElementById('referenceModal').style.display = 'none';
+    document.getElementById('referenceForm').reset();
+    uploadedFiles = [];
+    updateFileList();
+}
+
+// File upload handling
+const dropZone = document.getElementById('dropZone');
+const fileInput = document.getElementById('referenceFile');
+
+dropZone.addEventListener('click', () => fileInput.click());
+
+dropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropZone.classList.add('drag-over');
+});
+
+dropZone.addEventListener('dragleave', () => {
+    dropZone.classList.remove('drag-over');
+});
+
+dropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    const files = e.dataTransfer.files;
+    handleFiles(files);
+});
+
+fileInput.addEventListener('change', (e) => {
+    handleFiles(e.target.files);
+});
+
+function handleFiles(files) {
+    for(let file of files) {
+        if(file.type.match('application/pdf') || 
+           file.type.match('application/msword') || 
+           file.type.match('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
+            uploadedFiles.push(file);
+        }
+    }
+    updateFileList();
+}
+
+function updateFileList() {
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = '';
+    
+    uploadedFiles.forEach((file, index) => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        
+        const icon = file.type.includes('pdf') ? 'fa-file-pdf' : 'fa-file-word';
+        
+        fileItem.innerHTML = `
+            <div class="file-item-name">
+                <i class="fas ${icon}"></i>
+                ${file.name}
+            </div>
+            <button type="button" class="remove-file" onclick="removeFile(${index})">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        fileList.appendChild(fileItem);
+    });
+}
+
+function removeFile(index) {
+    uploadedFiles.splice(index, 1);
+    updateFileList();
+}
+
+function submitReference(event) {
+    event.preventDefault();
+    
+    // Create FormData object to send files and form data
+    const formData = new FormData();
+    uploadedFiles.forEach(file => {
+        formData.append('files[]', file);
+    });
+    
+    formData.append('name', document.getElementById('refName').value);
+    formData.append('company', document.getElementById('refCompany').value);
+    formData.append('email', document.getElementById('refEmail').value);
+    formData.append('phone', document.getElementById('refPhone').value);
+    formData.append('notes', document.getElementById('refNotes').value);
+
+    // Here you would typically send the formData to your backend
+    console.log('Submitting reference with files:', uploadedFiles);
+    closeReferenceModal();
+}
+    </script>
 </head>
 <body>
     <nav class="top-nav">
@@ -649,5 +949,100 @@
             </section>
         </main>
     </div>
+<!-- AI Recommendations Modal -->
+<div id="aiRecommendModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-robot"></i> AI Profile Recommendations</h3>
+            <button class="close-modal" onclick="closeAIRecommendModal()">&times;</button>
+        </div>
+        
+        <!-- Loading State -->
+        <div id="loadingState" class="loading-state">
+            <div class="loading-spinner">
+                <i class="fas fa-cog fa-spin"></i>
+            </div>
+            <div class="loading-messages">
+                <p class="loading-message">Analyzing profile...</p>
+                <div class="typing-dots"></div>
+            </div>
+        </div>
+
+        <!-- Recommendations List (Initially Hidden) -->
+        <div id="recommendationsList" class="recommendations-list" style="display: none;">
+            <div class="recommendation-item">
+                <i class="fas fa-certificate"></i>
+                <div>
+                    <h4>Add More Certifications</h4>
+                    <p>Consider adding your Food Handler's Certificate to strengthen your credentials.</p>
+                </div>
+            </div>
+            <div class="recommendation-item">
+                <i class="fas fa-camera"></i>
+                <div>
+                    <h4>Update Profile Photo</h4>
+                    <p>Your profile photo is over 6 months old. A recent photo can increase engagement.</p>
+                </div>
+            </div>
+            <div class="recommendation-item">
+                <i class="fas fa-chart-line"></i>
+                <div>
+                    <h4>Highlight Achievements</h4>
+                    <p>Add specific metrics from your past events (e.g., guest satisfaction rates, event sizes).</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Reference Upload Modal -->
+<div id="referenceModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-file-upload"></i> Add Reference</h3>
+            <button class="close-modal" onclick="closeReferenceModal()">&times;</button>
+        </div>
+        <form id="referenceForm" onsubmit="submitReference(event)">
+            <!-- File Upload Section -->
+            <div class="upload-section">
+                <div class="file-drop-zone" id="dropZone">
+                    <input type="file" id="referenceFile" class="file-input" accept=".pdf,.doc,.docx" multiple>
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Drag and drop files here or click to browse</p>
+                    <p class="file-info">Accepted formats: PDF, DOC, DOCX</p>
+                </div>
+                <div id="fileList" class="file-list"></div>
+            </div>
+
+            <!-- Reference Information -->
+            <div class="form-group">
+                <label for="refName">Reference Name*</label>
+                <input type="text" id="refName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="refCompany">Company/Organization*</label>
+                <input type="text" id="refCompany" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="refEmail">Email*</label>
+                    <input type="email" id="refEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="refPhone">Phone</label>
+                    <input type="tel" id="refPhone">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="refNotes">Additional Notes</label>
+                <textarea id="refNotes" rows="3"></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Add Reference</button>
+        </form>
+    </div>
+</div>
 </body>
 </html>
