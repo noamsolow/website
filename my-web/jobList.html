@@ -193,15 +193,15 @@
         }
 
         .job-tag {
-            background: #e2e8f0;
+            background: #f9fbff;
             padding: 4px 8px;
             border-radius: 12px;
             font-size: 0.8rem;
-            color: #4a5568;
+            color: #2f3541;
         }
 
         .apply-btn {
-            background: #667eea;
+            background: #2340be;
             color: white;
             border: none;
             padding: 8px 16px;
@@ -227,16 +227,47 @@
         .jobs-grid::-webkit-scrollbar-track {
             background-color: #f8f9fa;
         }
+        .jobs-scrollable-container {
+            max-height: 650px; /* Adjust height as needed */
+            overflow-y: auto; /* Enables vertical scrolling */
+            margin-top: 10px;
+            padding-right: 10px; /* Add padding for better aesthetics */
+        }
+
+        .jobs-scrollable-container::-webkit-scrollbar {
+            width: 8px; /* Width of the scrollbar */
+        }
+
+        .jobs-scrollable-container::-webkit-scrollbar-thumb {
+            background: #888; /* Color of the scrollbar thumb */
+            border-radius: 4px; /* Rounded corners for the scrollbar thumb */
+        }
+
+        .jobs-scrollable-container::-webkit-scrollbar-thumb:hover {
+            background: #555; /* Darker color on hover */
+        }
+
+        .jobs-scrollable-container::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Background color of the scrollbar track */
+        }
+
+        .jobs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* Four cards per row */
+    gap: 20px; /* Space between job cards */
+}
+
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>Available Events</h1>
-            <button class="profile-btn">
+            <a href="worker-profile.html" class="profile-btn">
                 <i class="fas fa-user"></i> View Profile
-            </button>
+            </a>
         </div>
+        
 
         <div class="main-content">
             <div class="filters">
@@ -299,118 +330,321 @@
                 <div class="search-bar">
                     <input type="text" class="search-input" placeholder="Search events by venue, location, or role...">
                 </div>
-
-                <div class="jobs-grid">
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div>
-                                <h3 class="job-title">Wedding Reception Service</h3>
-                                <p class="job-venue">Four Seasons Hotel</p>
-                            </div>
-                            <span class="job-pay">$25/hr</span>
-                        </div>
-                        <div class="job-details">
-                            <div class="detail-item">
-                                <i class="far fa-calendar"></i>
-                                <span>Jan 20, 2025</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="far fa-clock"></i>
-                                <span>4:00 PM - 11:00 PM</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Downtown</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-users"></i>
-                                <span>250 Guests</span>
-                            </div>
-                        </div>
-                        <p class="job-description">Elegant wedding reception requiring experienced servers for plated dinner service. Wine service experience required.</p>
-                        <div class="job-footer">
-                            <div class="job-tags">
-                                <span class="job-tag">Wedding</span>
-                                <span class="job-tag">Fine Dining</span>
-                            </div>
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div>
-                                <h3 class="job-title">Corporate Gala Bartender</h3>
-                                <p class="job-venue">Ritz Carlton</p>
-                            </div>
-                            <span class="job-pay">$30/hr</span>
-                        </div>
-                        <div class="job-details">
-                            <div class="detail-item">
-                                <i class="far fa-calendar"></i>
-                                <span>Jan 25, 2025</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="far fa-clock"></i>
-                                <span>5:00 PM - 12:00 AM</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Financial District</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-users"></i>
-                                <span>400 Guests</span>
-                            </div>
-                        </div>
-                        <p class="job-description">High-end corporate event seeking experienced bartenders. Craft cocktail experience and TIPS certification required.</p>
-                        <div class="job-footer">
-                            <div class="job-tags">
-                                <span class="job-tag">Corporate</span>
-                                <span class="job-tag">Bartending</span>
-                            </div>
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
-
-                    <div class="job-card">
-                        <div class="job-header">
-                            <div>
-                                <h3 class="job-title">Private Birthday Party</h3>
-                                <p class="job-venue">The Peninsula</p>
-                            </div>
-                            <span class="job-pay">$22/hr</span>
-                        </div>
-                        <div class="job-details">
-                            <div class="detail-item">
-                                <i class="far fa-calendar"></i>
-                                <span>Jan 28, 2025</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="far fa-clock"></i>
-                                <span>6:00 PM - 10:00 PM</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-map-marker-alt"></i>
-                                <span>Upper East Side</span>
-                            </div>
-                            <div class="detail-item">
-                                <i class="fas fa-users"></i>
-                                <span>50 Guests</span>
-                            </div>
-                        </div>
-                        <p class="job-description">Intimate birthday celebration requiring servers for passed appetizers and buffet management.</p>
-                        <div class="job-footer">
-                            <div class="job-tags">
-                                <span class="job-tag">Private</span>
-                                <span class="job-tag">Casual</span>
-                            </div>
-                            <button class="apply-btn">Apply Now</button>
-                        </div>
-                    </div>
+                <div class="jobs-scrollable-container">
+                    <div class="jobs-grid" id="jobsGrid"></div>
                 </div>
             </div>
         </div>
     </div>
+    <script>
+        // Initialize job data
+        const jobs = [
+    {
+        title: "Wedding Reception Service",
+        venue: "Four Seasons Hotel",
+        pay: 25,
+        date: "Jan 20, 2025",
+        time: "4:00 PM - 11:00 PM",
+        location: "Downtown",
+        guests: 250,
+        description: "Elegant wedding reception requiring experienced servers for plated dinner service. Wine service experience required.",
+        tags: ["Wedding", "Fine Dining"],
+        type: "Wedding",
+        role: "Server"
+    },
+    {
+        title: "Corporate Gala Bartender",
+        venue: "Ritz Carlton",
+        pay: 30,
+        date: "Jan 25, 2025",
+        time: "5:00 PM - 12:00 AM",
+        location: "Financial District",
+        guests: 400,
+        description: "High-end corporate event seeking experienced bartenders. Craft cocktail experience and TIPS certification required.",
+        tags: ["Corporate", "Bartending"],
+        type: "Corporate",
+        role: "Bartender"
+    },
+    {
+        title: "Waiter/Waitress",
+        venue: "Downtown Cafe",
+        pay: 20,
+        date: "Jan 20, 2025",
+        time: "6:00 PM - 10:00 PM",
+        location: "Downtown",
+        guests: 50,
+        description: "Cozy dinner service at a local cafe. Experience in casual dining preferred.",
+        tags: ["Casual Dining"],
+        type: "Cafe",
+        role: "Waiter/Waitress"
+    },
+    {
+        title: "Event Host",
+        venue: "City Banquet Hall",
+        pay: 35,
+        date: "Feb 1, 2025",
+        time: "5:00 PM - 11:00 PM",
+        location: "Midtown",
+        guests: 300,
+        description: "Formal gala requiring professional event hosts to guide guests and manage schedules. Public speaking skills required.",
+        tags: ["Gala", "Hosting"],
+        type: "Formal",
+        role: "Host"
+    },
+    {
+    title: "Casual Dining Server",
+    venue: "Lakeside Bistro",
+    pay: 18,
+    date: "Jan 22, 2025",
+    time: "5:00 PM - 10:00 PM",
+    location: "Lakeside",
+    guests: 120,
+    description: "Seeking friendly servers for a casual dining experience. Experience in handling multiple tables and knowledge of basic food handling is a plus.",
+    tags: ["Casual Dining", "Server"],
+    type: "Bistro",
+    role: "Server"
+},
+{
+    title: "Private Party Bartender",
+    venue: "The Greenhouse",
+    pay: 28,
+    date: "Jan 28, 2025",
+    time: "6:00 PM - 1:00 AM",
+    location: "Suburbia",
+    guests: 100,
+    description: "Private birthday party looking for an experienced bartender to craft cocktails and manage a small bar. Certification preferred but not required.",
+    tags: ["Private Party", "Bartending"],
+    type: "Private",
+    role: "Bartender"
+},
+{
+    title: "Concert Usher",
+    venue: "Downtown Arena",
+    pay: 22,
+    date: "Jan 30, 2025",
+    time: "6:00 PM - 12:00 AM",
+    location: "Downtown",
+    guests: 5000,
+    description: "Large concert event requiring ushers to guide attendees, check tickets, and ensure smooth seating arrangements.",
+    tags: ["Concert", "Usher"],
+    type: "Entertainment",
+    role: "Usher"
+},
+{
+    title: "Banquet Server",
+    venue: "Grandview Hotel",
+    pay: 26,
+    date: "Feb 5, 2025",
+    time: "3:00 PM - 10:00 PM",
+    location: "Hilltop",
+    guests: 350,
+    description: "Looking for experienced banquet servers for a high-end event. Duties include table setting, food service, and guest interaction.",
+    tags: ["Banquet", "Server"],
+    type: "Corporate",
+    role: "Server"
+},
+{
+    title: "VIP Lounge Attendant",
+    venue: "Luxury Sports Complex",
+    pay: 40,
+    date: "Feb 8, 2025",
+    time: "7:00 PM - 1:00 AM",
+    location: "City Center",
+    guests: 200,
+    description: "Exclusive VIP lounge requiring professional attendants to serve drinks, ensure cleanliness, and provide top-tier customer service.",
+    tags: ["VIP", "Customer Service"],
+    type: "Hospitality",
+    role: "Attendant"
+},
+{
+    title: "Wedding Photographer Assistant",
+    venue: "Rose Garden Pavilion",
+    pay: 20,
+    date: "Feb 10, 2025",
+    time: "2:00 PM - 8:00 PM",
+    location: "Botanical District",
+    guests: 150,
+    description: "Assist lead photographer in capturing the wedding ceremony and reception. Ideal for those with basic photography knowledge.",
+    tags: ["Wedding", "Photography"],
+    type: "Wedding",
+    role: "Assistant"
+},
+{
+    title: "Outdoor Festival Crew",
+    venue: "River Park",
+    pay: 18,
+    date: "Feb 15, 2025",
+    time: "10:00 AM - 6:00 PM",
+    location: "Riverside",
+    guests: 2000,
+    description: "Join the crew of a vibrant outdoor festival. Duties include setup, vendor assistance, and managing attendee flow.",
+    tags: ["Festival", "Outdoor"],
+    type: "Festival",
+    role: "Crew Member"
+},
+{
+    title: "Kitchen Assistant",
+    venue: "Golden Plate Restaurant",
+    pay: 15,
+    date: "Jan 21, 2025",
+    time: "10:00 AM - 4:00 PM",
+    location: "Old Town",
+    guests: 0,
+    description: "Assist chefs in food preparation and maintaining cleanliness in the kitchen. Great entry-level role for culinary enthusiasts.",
+    tags: ["Kitchen", "Food Prep"],
+    type: "Restaurant",
+    role: "Kitchen Assistant"
+}
+
+];
+
+    
+        // Add event listeners when the document loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Search functionality
+            const searchInput = document.querySelector('.search-input');
+            searchInput.addEventListener('input', filterJobs);
+    
+            // Filter checkboxes
+            const checkboxes = document.querySelectorAll('.filter-item input');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', filterJobs);
+            });
+    
+            // Initial render
+            renderJobs(jobs);
+        });
+    
+       // Function to render job cards
+function renderJobs(jobsToRender) {
+    const jobsGrid = document.querySelector('.jobs-grid');
+    
+    // Define backgrounds for different job types
+    const backgroundStyles = {
+        Wedding:  "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Corporate: "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Cafe: "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Formal:  "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Bistro:  "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Private: "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Entertainment:  "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Hospitality:   "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Festival:  "linear-gradient(to right, #e0eafc, #e0eafc)",
+        Restaurant:  "linear-gradient(to right, #e0eafc, #e0eafc)",
+    };
+
+    jobsGrid.innerHTML = jobsToRender.map(job => {
+        const background = backgroundStyles[job.type] || "linear-gradient(to right, #e0eafc, #cfdef3)"; // Default background
+        return `
+            <div class="job-card" style="background: ${background}">
+                <div class="job-header">
+                    <div>
+                        <h3 class="job-title">${job.title}</h3>
+                        <p class="job-venue">${job.venue}</p>
+                    </div>
+                    <span class="job-pay">$${job.pay}/hr</span>
+                </div>
+                <div class="job-details">
+                    <div class="detail-item">
+                        <i class="far fa-calendar"></i>
+                        <span>${job.date}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="far fa-clock"></i>
+                        <span>${job.time}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${job.location}</span>
+                    </div>
+                    <div class="detail-item">
+                        <i class="fas fa-users"></i>
+                        <span>${job.guests} Guests</span>
+                    </div>
+                </div>
+                <p class="job-description">${job.description}</p>
+                <div class="job-footer">
+                    <div class="job-tags">
+                        ${job.tags.map(tag => `<span class="job-tag">${tag}</span>`).join('')}
+                    </div>
+                    <button class="apply-btn">Apply Now</button>
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    // Add event listeners to apply buttons
+    document.querySelectorAll('.apply-btn').forEach(button => {
+        button.addEventListener('click', handleApply);
+    });
+}
+
+    
+        // Function to filter jobs
+        function filterJobs() {
+            const searchTerm = document.querySelector('.search-input').value.toLowerCase();
+            const selectedEventTypes = Array.from(document.querySelectorAll('#wedding, #corporate, #private'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.id.charAt(0).toUpperCase() + cb.id.slice(1));
+            
+            const selectedRoles = Array.from(document.querySelectorAll('#server, #bartender, #captain'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.id.charAt(0).toUpperCase() + cb.id.slice(1));
+    
+            const selectedPayRanges = Array.from(document.querySelectorAll('#range1, #range2, #range3'))
+                .filter(cb => cb.checked)
+                .map(cb => cb.id);
+    
+            const filteredJobs = jobs.filter(job => {
+                const matchesSearch = 
+                    job.title.toLowerCase().includes(searchTerm) ||
+                    job.venue.toLowerCase().includes(searchTerm) ||
+                    job.location.toLowerCase().includes(searchTerm);
+    
+                const matchesType = selectedEventTypes.length === 0 || selectedEventTypes.includes(job.type);
+                const matchesRole = selectedRoles.length === 0 || selectedRoles.includes(job.role);
+                
+                const matchesPay = selectedPayRanges.length === 0 || selectedPayRanges.some(range => {
+                    if (range === 'range1') return job.pay >= 15 && job.pay < 20;
+                    if (range === 'range2') return job.pay >= 20 && job.pay < 25;
+                    if (range === 'range3') return job.pay >= 25;
+                    return false;
+                });
+    
+                return matchesSearch && matchesType && matchesRole && matchesPay;
+            });
+    
+            renderJobs(filteredJobs);
+        }
+    
+        // Function to handle apply button clicks
+        function handleApply(event) {
+            const jobCard = event.target.closest('.job-card');
+            const jobTitle = jobCard.querySelector('.job-title').textContent;
+            alert(`Application submitted for: ${jobTitle}`);
+            // Add your application logic here
+        }
+        function displayJobs(jobList) {
+    jobsGrid.innerHTML = ''; // Clear existing jobs
+    jobList.forEach(job => {
+        const jobCard = document.createElement('div');
+        jobCard.classList.add('job-card');
+        jobCard.innerHTML = `
+            <h3 class="job-title">${job.title}</h3>
+            <p class="job-venue"><strong>Venue:</strong> ${job.venue}</p>
+            <p class="job-location"><strong>Location:</strong> ${job.location}</p>
+            <p class="job-date"><strong>Date:</strong> ${job.date}</p>
+            <p class="job-time"><strong>Time:</strong> ${job.time}</p>
+            <p class="job-pay"><strong>Pay:</strong> $${job.pay}/hr</p>
+            <p class="job-guests"><strong>Guests:</strong> ${job.guests}</p>
+            <p class="job-description">${job.description}</p>
+            <p class="job-tags"><strong>Tags:</strong> ${job.tags.join(', ')}</p>
+            <button class="apply-button">Apply</button>
+        `;
+        jobsGrid.appendChild(jobCard);
+    });
+}
+
+    </script>
 </body>
 </html>
